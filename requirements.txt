@@ -3,5 +3,4 @@ pathlib
 requests
 pandas
 pandas-io
-itertools
 crim_intervals
