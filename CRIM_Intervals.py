@@ -352,7 +352,7 @@ if st.button('Run Melodic Search'):
 st.subheader("Step 7: Filter Previous for Similar Durations--Set Threshold at Left")
 
 st.sidebar.write("Set Threshold of Durational Differences")
-max_sum_diffs = st.sidebar.number_input("Enter Maximum Durational Differences", min_value=1, max_value=20)
+max_sum_diffs = st.sidebar.number_input("Enter Maximum Durational Differences", min_value=None, max_value=None)
 
 if st.button('Run Duration Match Filter'):
 
