@@ -349,6 +349,9 @@ if st.button('Run Melodic Search'):
     # Stage 2 Rhythmic Simliarities Search
     
 st.subheader("Step 7: Filter Previous for Similar Durations")
+
+max_sum_diffs = st.number_input("Enter Maximum Durational Differences", min_value=1, max_value=20)
+
 if st.button('Run Duration Match Filter'):
 
 # clean-up results of melodic match:  chance patterns to tuples 
@@ -388,7 +391,7 @@ if st.button('Run Duration Match Filter'):
 
     ratio_distances = get_ratio_distances(results, "pattern_generating_match", ["piece_title", "part", "start_measure", "end_measure"])
 
-    ratios_filtered = ratio_distances[ratio_distances.sum_diffs == 0]
+    ratios_filtered = ratio_distances[ratio_distances.sum_diffs <= max_sum_diffs]
     st.write("Results Filtered Distances of Durational Ratios")
     st.write(ratios_filtered)
 
@@ -398,18 +401,3 @@ if st.button('Run Duration Match Filter'):
     st.markdown(tmp_download_link, unsafe_allow_html=True)
 
     
-# output = export_pandas(find_matches)
-#     #pd.DataFrame(output).head()
-#     results = pd.DataFrame(output)
-#     st.write('Output of Melodic Pattern Search')
-#     st.write(results)
-
-#     # Option to download CSV of the first-stage results
-#     st.subheader("Optional:  Download CSV from Step 6")
-#     s2 = st.text_input('Provide filename for combined rhythmic-melodic pattern match download (must include ".csv")')
-#     tmp_download_link = download_link(results, s2, 'Click here to download your data!')
-#     st.markdown(tmp_download_link, unsafe_allow_html=True)
-
-
-
-
