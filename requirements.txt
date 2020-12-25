@@ -4,3 +4,5 @@ requests
 pandas
 pandas-io
 crim_intervals
+tee
+combinations
