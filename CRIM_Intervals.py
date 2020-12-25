@@ -234,8 +234,9 @@ st.write("Visit the [CRIM Project](https://crimproject.org) and its [Members Pag
 st.write("Also see the [Relationship Metadata Viewer] (https://crim-relationship-data-viewer.herokuapp.com/) and [Observation Metadata Viewer] (https://crim-observation-data-viewer.herokuapp.com/)")
 
 
-st.header("Select One or More Pieces to Analyze")
-st.subheader("Step 1: Choose with Menu, or Type ID, such as 'Model_0008'")
+
+st.sidebar.subheader("Step 1: Choose One or More Pieces to Analyze with Menu, or Type ID, such as 'Model_0008'")
+st.subheader("Select Works Here")
 selected_works = st.multiselect('', CRIM_Corpus)
 print_list = pd.DataFrame(selected_works)
 st.write(print_list)
@@ -348,9 +349,10 @@ if st.button('Run Melodic Search'):
 
     # Stage 2 Rhythmic Simliarities Search
     
-st.subheader("Step 7: Filter Previous for Similar Durations")
+st.subheader("Step 7: Filter Previous for Similar Durations--Set Threshold at Left")
 
-max_sum_diffs = st.number_input("Enter Maximum Durational Differences", min_value=1, max_value=20)
+st.sidebar.write("Set Threshold of Durational Differences")
+max_sum_diffs = st.sidebar.number_input("Enter Maximum Durational Differences", min_value=1, max_value=20)
 
 if st.button('Run Duration Match Filter'):
 
