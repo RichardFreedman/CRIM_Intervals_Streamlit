@@ -235,10 +235,11 @@ st.write("Also see the [Relationship Metadata Viewer] (https://crim-relationship
 
 
 
-st.sidebar.subheader("Step 1: Choose One or More Pieces to Analyze with Menu, or Type ID, such as 'Model_0008'")
-st.subheader("Select Works Here")
-selected_works = st.multiselect('', CRIM_Corpus)
+st.sidebar.subheader("Step 1: Choose One or More Pieces to Analyze")
+st.sidebar.write("Select Works with Menu, or Type ID, such as 'Model_0008'")
+selected_works = st.sidebar.multiselect('', CRIM_Corpus)
 print_list = pd.DataFrame(selected_works)
+st.write("Your Selections:")
 st.write(print_list)
 #st.write(selected_works)
 
