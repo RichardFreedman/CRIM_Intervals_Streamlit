@@ -7,7 +7,7 @@ import base64
 from crim_intervals import *
 import ast
 from itertools import tee, combinations
-#import matplotlib
+import matplotlib
 
 # download function
 
@@ -243,7 +243,7 @@ st.write(print_list)
 #st.write(selected_works)
 
 # correct URL for MEI 4.0
-WorkList_mei = [el.replace("CRIM_", "MEI_4.0/") for el in selected_works]
+WorkList_mei = [el.replace("CRIM_", "https://crimproject.org/mei/MEI_4.0/CRIM_") for el in selected_works]
 
 # Now pass the list of MEI files to Crim intervals
 
