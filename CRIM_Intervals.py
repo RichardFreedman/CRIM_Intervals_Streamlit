@@ -7,7 +7,7 @@ import base64
 from crim_intervals import *
 import ast
 from itertools import tee, combinations
-import matplotlib
+# import matplotlib
 
 
 
