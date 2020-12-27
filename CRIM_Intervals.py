@@ -9,13 +9,15 @@ import ast
 from itertools import tee, combinations
 import matplotlib
 
-# download function
+
 
 @st.cache(allow_output_mutation=True)
 
 #sets up function to call Markdown File for "about"
 def read_markdown_file(markdown_file):
     return Path(markdown_file).read_text()
+
+# download function for output csv's
 
 def download_link(object_to_download, download_filename, download_link_text):
     """
@@ -225,6 +227,7 @@ CRIM_Corpus = ['CRIM_Mass_0001_1.mei',
  'CRIM_Model_0025.mei',
  'CRIM_Model_0026.mei',
 ]
+# general headers for main window
 
 #WorkList = ['CRIM_Model_0001.mei']
 st.header("CRIM Project:  CRIM Intervals")
@@ -247,7 +250,8 @@ st.write(print_list)
 WorkList_mei = [el.replace("CRIM_", "https://crimproject.org/mei/MEI_4.0/CRIM_") for el in selected_works]
 
 # Now pass the list of MEI files to Crim intervals
-
+#@st.cache(allow_output_mutation=True)
+#if st.sidebar.button('Load Selections'):
 corpus = CorpusBase(WorkList_mei)
 
 # Correct the MEI metadata
@@ -274,7 +278,6 @@ for i, path in enumerate(WorkList_mei):
         continue
 
 # Header
-
 
 # Select Actual or Incremental Durations
 st.sidebar.subheader("Step 2:  Select Rhythmic Preference")
@@ -304,65 +307,82 @@ else:
 # Select Vector Length and Minimum Number of Matches
 st.sidebar.subheader("Step 4:  Select Vectors, Matches, and Thresholds")
 
-vector_length = st.sidebar.number_input("Enter a Number for the Length of Vector", min_value=1, max_value=20)
+vector_length = st.sidebar.number_input("Enter a Number for the Length of Vector", min_value=1, max_value=20, value=5)
 
-minimum_match = st.sidebar.number_input("Enter a Minimum Number of Matches", min_value=1, max_value=20)
+minimum_match = st.sidebar.number_input("Enter a Minimum Number of Matches", min_value=1, max_value=20, value=3)
 
-close_distance = st.sidebar.number_input("If Close Search, then Enter Threshold", min_value=1, max_value=20)
+close_distance = st.sidebar.number_input("If Close Search, then Enter Threshold", min_value=1, max_value=20, value=2)
 
 patterns = into_patterns([scale], vector_length)
 
-# Creates empty variable needed for CSV download below (but which uses content defined)
-
-#results = pd.DataFrame()
-
 # Select Exact or Close
 
-st.sidebar.subheader("Step 5:  Exact or Close Matches AFTER making selections above!") 
-exact_close_choice = st.sidebar.radio('Select Exact or Close Match (if Close, then Select Treshold Above)', ["Exact", "Close", "cancel"])
 
-if exact_close_choice == 'Exact':
+st.subheader("Step 5:  Exact or Close Matches AFTER making selections at left!") 
+#exact_close_choice = st.sidebar.radio('Select Exact or Close Match (if Close, then Select Treshold Above)', ["No Selection", "Exact", "Close"])
+
+
+if st.button('Run Exact Search'):
+    patterns = into_patterns([scale], vector_length)
     find_matches = find_exact_matches(patterns, minimum_match)
-elif exact_close_choice == 'Close':
-    #close_distance = st.number_input("Enter a Threshold for Similarity", min_value=1, max_value=20)
-    find_matches = find_close_matches(patterns, minimum_match, close_distance)
-else:
-    st.write("Review Choices Before Running Search!")
-
-#minimum_match = st.slider('Minimum Number of Matches for Each Vector', min_value=2, max_value=20)
-st.subheader("Step 6: Run Melodic Similarity Search")
-if st.button('Run Melodic Search'):
-    #patterns = into_patterns([scale], vector_length)
-    #exact_matches = find_exact_matches(patterns, minimum_match)
-    #find_matches
     output = export_pandas(find_matches)
     #pd.DataFrame(output).head()
     results = pd.DataFrame(output)
-    st.write('Output of Melodic Pattern Search')
+    st.write('Output of Exact Melodic Pattern Search')
     st.write(results)
-
-    # Option to download CSV of the first-stage results
     st.subheader("Optional:  Download CSV from Step 6")
     s1 = st.text_input('Provide filename for melodic pattern match download (must include ".csv")')
     tmp_download_link = download_link(results, s1, 'Click here to download your data!')
     st.markdown(tmp_download_link, unsafe_allow_html=True)
-
-    # Stage 2 Rhythmic Simliarities Search
-    
-st.subheader("Step 7: Filter Previous for Similar Durations--Set Threshold at Left")
-
-st.sidebar.write("Set Threshold of Durational Differences")
-max_sum_diffs = st.sidebar.number_input("Enter Maximum Durational Differences", min_value=None, max_value=None)
-
-if st.button('Run Duration Match Filter'):
-
-# clean-up results of melodic match:  chance patterns to tuples 
+if st.button('Run Close Search'):
+    patterns = into_patterns([scale], vector_length)
+    find_matches = find_close_matches(patterns, minimum_match, close_distance)
     output = export_pandas(find_matches)
     #pd.DataFrame(output).head()
     results = pd.DataFrame(output)
-    st.write('Output of Melodic Pattern Search for Step 7')
-    #st.write(results)
+    st.write('Output of Close Melodic Pattern Search')
+    st.write(results)
+    st.subheader("Optional:  Download CSV from Step 6")
+    s2 = st.text_input('Provide filename for melodic pattern match download (must include ".csv")')
+    tmp_download_link = download_link(results, s2, 'Click here to download your data!')
+    st.markdown(tmp_download_link, unsafe_allow_html=True)
 
+
+#minimum_match = st.slider('Minimum Number of Matches for Each Vector', min_value=2, max_value=20)
+# st.subheader("Step 6: Run Melodic Similarity Search")
+# if st.button('Run Melodic Search'):
+#     #patterns = into_patterns([scale], vector_length)
+#     #exact_matches = find_exact_matches(patterns, minimum_match)
+#     #find_matches
+#     output = export_pandas(find_matches)
+#     #pd.DataFrame(output).head()
+#     results = pd.DataFrame(output)
+#     st.write('Output of Melodic Pattern Search')
+#     st.write(results)
+
+    # Option to download CSV of the first-stage results
+    # st.subheader("Optional:  Download CSV from Step 6")
+    # s1 = st.text_input('Provide filename for melodic pattern match download (must include ".csv")')
+    # tmp_download_link = download_link(results, s1, 'Click here to download your data!')
+    # st.markdown(tmp_download_link, unsafe_allow_html=True)
+
+    # Stage 2 Rhythmic Simliarities Search
+    
+st.subheader("Step 8: Filter Previous for Similar Durations")
+st.write('Set Threshold at Left in Step 7')
+
+st.sidebar.subheader("Step 7: Set Threshold of Durational Differences")
+max_sum_diffs = st.sidebar.number_input("Enter Maximum Durational Differences (Whole Number or Fractional Value)", min_value=None, max_value=None, value=2)
+
+if st.button('Run Exact Search with Duration Filter'):
+    patterns = into_patterns([scale], vector_length)
+    find_matches = find_exact_matches(patterns, minimum_match)
+
+    output = export_pandas(find_matches)
+    results = pd.DataFrame(output)
+    st.write('Output of Exact Melodic Pattern Search')
+    
+    # clean-up results of melodic match:  chance patterns to tuples 
     results["pattern_generating_match"] = results["pattern_generating_match"].apply(tuple)
 
     # clean-up column titles
@@ -386,7 +406,7 @@ if st.button('Run Duration Match Filter'):
     # calculates 'duration ratios' for each soggetto, then adds this to the DF
 
     results["duration_ratios"] = results.note_durations.apply(get_ratios)
-    st.write("Results with Duration Ratios Added")
+    
     st.write(results)
 
     # now we calculate the _distances_ between pairs of ratios
@@ -398,8 +418,84 @@ if st.button('Run Duration Match Filter'):
     st.write(ratios_filtered)
 
     st.subheader("Optional:  Download CSV from Step 7")
-    s2 = st.text_input('Provide filename for durational match download (must include ".csv")')
-    tmp_download_link = download_link(ratios_filtered, s2, 'Click here to download your data!')
+    s3 = st.text_input('Provide filename for durational match download (must include ".csv")')
+    tmp_download_link = download_link(ratios_filtered, s3, 'Click here to download your data!')
     st.markdown(tmp_download_link, unsafe_allow_html=True)
 
+if st.button('Run Close Search with Duration Filter'):
+    patterns = into_patterns([scale], vector_length)
+    find_matches = find_close_matches(patterns, minimum_match)
+
+    output = export_pandas(find_matches)
+    results = pd.DataFrame(output)
+    st.write('Output of Close Melodic Pattern Search')
     
+    # clean-up results of melodic match:  chance patterns to tuples 
+    results["pattern_generating_match"] = results["pattern_generating_match"].apply(tuple)
+
+    # clean-up column titles
+
+    # results.rename(columns=
+    #                {'Pattern Generating Match': 'Pattern_Generating_Match', 
+    #                 'Pattern matched':'Pattern_Matched',
+    #                 'Piece Title': 'Piece_Title',
+    #                 'First Note Measure Number': 'Start_Measure',
+    #                 'Last Note Measure Number': 'Stop_Measure',
+    #                 'Note Durations': 'Note_Durations'
+    #                },
+    #                 inplace=True)
+
+    # evaluation Note_Durations as literals--only needed if we're importing CSV
+
+    #results['note_durations'] = results['note_durations'].apply(ast.literal_eval)
+    
+    durations = results['note_durations']
+    
+    # calculates 'duration ratios' for each soggetto, then adds this to the DF
+
+    results["duration_ratios"] = results.note_durations.apply(get_ratios)
+    st.write("Results of Close Search with Duration Ratios Added")
+    st.write(results)
+
+    # now we calculate the _distances_ between pairs of ratios
+
+    ratio_distances = get_ratio_distances(results, "pattern_generating_match", ["piece_title", "part", "start_measure", "end_measure"])
+
+    ratios_filtered = ratio_distances[ratio_distances.sum_diffs <= max_sum_diffs]
+    st.write("Results Filtered Distances of Durational Ratios")
+    st.write(ratios_filtered)
+
+    st.subheader("Optional:  Download CSV from Step 7")
+    s3 = st.text_input('Provide filename for durational match download (must include ".csv")')
+    tmp_download_link = download_link(ratios_filtered, s3, 'Click here to download your data!')
+    st.markdown(tmp_download_link, unsafe_allow_html=True)
+# Classify Presentation Types
+st.sidebar.subheader("Step 9: Set Threshold of Durational Differences for Presentation Types")
+max_sum_diffs_classify = st.sidebar.number_input("Enter Maximum Durational Differences Among Soggetti to be Classified (whole number only)", min_value=None, max_value=None, value=1)
+
+
+st.subheader("Step 10: Classify Presentation Types")
+st.write('One Piece at a Time! ')
+
+exact_close_choice= st.radio('Exact or Close Matches?', ["Exact","Close"])
+if st.button('Run Presentation Classifier'):   
+    if exact_close_choice == 'Exact':
+        find_matches = find_exact_matches(patterns, minimum_match)
+        classified_matches = classify_matches(find_matches, max_sum_diffs_classify)
+    elif exact_close_choice == 'Close':
+        find_matches = find_close_matches(patterns, minimum_match, close_distance)
+        classified_matches = classify_matches(find_matches, max_sum_diffs_classify)
+    else:
+        st.write("Error: Review Choices Before Running Search!")
+    export_to_csv(classified_matches)
+    #st.write(classified_matches)
+    #pd.DataFrame(output).head()
+
+    #st.subheader("Optional:  Download CSV from Step 8")
+    #s4 = st.text_input('Provide filename for classified patterns (must include ".csv")')
+    #tmp_download_link = download_link(classified_matches, s4, 'Click here to download your data!')
+    #st.markdown(tmp_download_link, unsafe_allow_html=True)
+
+## For CSV export, use the following (and follow prompts for file name)
+
+    #export_to_csv(classified_matches)
