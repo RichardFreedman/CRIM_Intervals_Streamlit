@@ -323,7 +323,7 @@ elif duration_choice == 'Incremental@4':
 else:
     st.write("Please select duration preference")
 # Select Generic or Semitone
-st.sidebar.subheader("Step 3:  Select Interval Prefence")
+st.sidebar.subheader("Step 3:  Select Interval Preference")
 scale_choice = st.sidebar.radio('Select Diatonic or Chromatic', ["Diatonic","Chromatic"])
 
 if scale_choice == 'Diatonic':
