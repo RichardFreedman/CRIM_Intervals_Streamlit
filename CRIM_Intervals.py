@@ -258,11 +258,11 @@ st.subheader("Python Scripts for Analysis of Similar Soggetti in Citations: The 
 st.write("Visit the [CRIM Project](https://crimproject.org) and its [Members Pages] (https://sites.google.com/haverford.edu/crim-project/home)")
 st.write("Also see the [Relationship Metadata Viewer] (https://crim-relationship-data-viewer.herokuapp.com/) and [Observation Metadata Viewer] (https://crim-observation-data-viewer.herokuapp.com/)")
 
-
+TestPiece = ['/Users/rfreedma/Documents/Python_Projects/CRIM-notebooks/CRIM/CRIM_intervals_test_4.0.mei']
 
 st.sidebar.subheader("Step 1: Choose One or More Pieces to Analyze")
 st.sidebar.write("Select Works with Menu, or Type ID, such as 'Model_0008'")
-selected_works = st.sidebar.multiselect('', CRIM_Corpus)
+selected_works = st.sidebar.multiselect('', TestPiece)
 print_list = pd.DataFrame(selected_works)
 st.write("Your Selections:")
 st.write(print_list)
@@ -271,10 +271,17 @@ st.write(print_list)
 # correct URL for MEI 4.0
 WorkList_mei = [el.replace("CRIM_", "https://crimproject.org/mei/MEI_4.0/CRIM_") for el in selected_works]
 
+
+
 # Now pass the list of MEI files to Crim intervals
-#@st.cache(allow_output_mutation=True)
-#if st.sidebar.button('Load Selections'):
+@st.cache(allow_output_mutation=True)
+if st.sidebar.button('Load Selections'):
 corpus = CorpusBase(WorkList_mei)
+
+
+# This is for using local files
+
+#corpus = CorpusBase(TestPiece)
 
 # Correct the MEI metadata
 
