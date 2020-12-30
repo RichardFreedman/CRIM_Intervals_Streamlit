@@ -493,7 +493,7 @@ if st.sidebar.button('Run Close Search with Duration Filter'):
 
 # Classify Presentation Types
 
-st.sidebar.subheader("Step : Classify Presentation Types")
+st.sidebar.subheader("Step 7: Classify Presentation Types")
 st.sidebar.write('One Piece at a Time is Best!')
 
 st.sidebar.write()
