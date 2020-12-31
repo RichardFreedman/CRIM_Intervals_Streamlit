@@ -7,11 +7,12 @@ import base64
 from crim_intervals import *
 import ast
 from itertools import tee, combinations
+from typing import List
 # import matplotlib
 
 
 
-@st.cache(allow_output_mutation=True)
+
 
 #sets up function to call Markdown File for "about"
 def read_markdown_file(markdown_file):
@@ -125,7 +126,7 @@ def classified_matches_to_pandas(matches):
     return pd.DataFrame(soggetti_matches)
 # work lists
 
-CRIM_Corpus = ['CRIM_Mass_0001_1.mei',
+WorkList_mei = ['CRIM_Mass_0001_1.mei',
  'CRIM_Mass_0001_2.mei',
  'CRIM_Mass_0001_3.mei',
  'CRIM_Mass_0001_4.mei',
@@ -262,7 +263,7 @@ st.write("Also see the [Relationship Metadata Viewer] (https://crim-relationship
 
 st.sidebar.subheader("Step 1: Choose One or More Pieces to Analyze")
 st.sidebar.write("Select Works with Menu, or Type ID, such as 'Model_0008'")
-selected_works = st.sidebar.multiselect('', CRIM_Corpus)
+selected_works = st.sidebar.multiselect('', WorkList_mei)
 print_list = pd.DataFrame(selected_works)
 st.write("Your Selections:")
 st.write(print_list)
@@ -271,10 +272,15 @@ st.write(print_list)
 # correct URL for MEI 4.0
 WorkList_mei = [el.replace("CRIM_", "https://crimproject.org/mei/MEI_4.0/CRIM_") for el in selected_works]
 
+@st.cache(allow_output_mutation=True)
+def load_corpusbase(WorkList_mei:List):
+    corpus = CorpusBase(WorkList_mei)
+    return corpus
+
 # Now pass the list of MEI files to Crim intervals
 #@st.cache(allow_output_mutation=True)
 #if st.sidebar.button('Load Selections'):
-corpus = CorpusBase(WorkList_mei)
+corpus = load_corpusbase(WorkList_mei)
 
 # Correct the MEI metadata
 
