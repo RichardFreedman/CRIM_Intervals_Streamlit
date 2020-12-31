@@ -322,7 +322,7 @@ elif duration_choice == 'Incremental@4':
 else:
     st.write("Please select duration preference")
 # Select Generic or Semitone
-st.sidebar.subheader("Step 3:  Select Interval Prefence")
+st.sidebar.subheader("Step 3:  Select Interval Preference")
 scale_choice = st.sidebar.radio('Select Diatonic or Chromatic', ["Diatonic","Chromatic"])
 
 if scale_choice == 'Diatonic':
@@ -341,7 +341,7 @@ minimum_match = st.sidebar.number_input("Enter a Minimum Number of Matches, or u
 
 close_distance = st.sidebar.number_input("If Close Search, then Enter Threshold, or use default", min_value=1, max_value=20, value=2)
 
-max_sum_diffs = st.sidebar.number_input("Enter Maximum Durational Differences (Whole Number or Fractional Value), or use defaul", min_value=None, max_value=None, value=2)
+max_sum_diffs = st.sidebar.number_input("Enter Maximum Durational Differences (Whole Number or Fractional Value), or use default", min_value=None, max_value=None, value=2)
 
 patterns = into_patterns([scale], vector_length)
 
