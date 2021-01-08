@@ -119,7 +119,7 @@ def classified_matches_to_pandas(matches):
                 "type": cm.type,
                 "part": soggetti.first_note.part.strip("[] "),
                 "start_measure": soggetti.first_note.note.measureNumber,
-                "soggetto_number": j + 1,
+                "entry_number": j + 1,
                 "pattern": cm.pattern,
                 "match_number": i + 1
             })
