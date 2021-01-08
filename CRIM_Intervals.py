@@ -270,7 +270,8 @@ st.write(print_list)
 #st.write(selected_works)
 
 # correct URL for MEI 4.0
-WorkList_mei = [el.replace("CRIM_", "https://crimproject.org/mei/MEI_4.0/CRIM_") for el in selected_works]
+cwd = str(Path.cwd())
+WorkList_mei = [el.replace("CRIM_", cwd+"/mei/CRIM_") for el in selected_works]
 
 @st.cache(allow_output_mutation=True)
 def load_corpusbase(WorkList_mei:List):
